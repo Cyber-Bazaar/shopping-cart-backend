@@ -1,12 +1,13 @@
 import express from "express";
 import "reflect-metadata";
 import { AppDataSource } from "../config/data.source";
-
+import productRouter from "./routes/product.routes";
+let cors = require("cors");
 const app = express();
 const port = 5000;
-
-// Middleware
-app.use(express.json());
+app.use(cors());
+// Routes
+app.use("/api/product", productRouter);
 
 const startServer = async (port: number) => {
   try {
