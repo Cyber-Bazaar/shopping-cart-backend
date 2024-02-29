@@ -8,6 +8,7 @@ describe("ProductService", () => {
   beforeEach(() => {
     mockProductRepository = {
       getAllProducts: jest.fn(),
+      getProductById: jest.fn().mockResolvedValue(null),
     } as jest.Mocked<IProductRepository>;
 
     productService = new ProductService(mockProductRepository);
