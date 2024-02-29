@@ -14,7 +14,7 @@ export class ProductRepository implements IProductRepository {
     return await this.db.getRepository(Product).find();
   }
 
-  // async findByEmail(email: string): Promise<User | null> {
-  //   return await this.db.getRepository(User).findOneBy({ email });
-  // }
+  async getProductById(id: number): Promise<Product | null> {
+    return await this.db.getRepository(Product).findOne({ where: { id } });
+  }
 }

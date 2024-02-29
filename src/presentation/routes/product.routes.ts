@@ -19,7 +19,11 @@ try {
   router
     .route("/get-products")
     .get(productController.getProduct.bind(productController));
+
+  router
+    .route("/get-product/:id")
+    .get(productController.getProductById.bind(productController));
 } catch (error) {
-  console.error("Error resolving UserController:", error);
+  console.error("Error resolving Controller:", error);
 }
 export default router;

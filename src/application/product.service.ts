@@ -17,4 +17,13 @@ export class ProductService {
       throw error;
     }
   }
+
+  async getProductById(id: number): Promise<Product | null> {
+    try {
+      return await this.productRepository.getProductById(id);
+    } catch (error) {
+      console.error("Error while fetching user:", error);
+      throw error;
+    }
+  }
 }
