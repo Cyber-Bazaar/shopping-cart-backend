@@ -18,11 +18,11 @@ try {
     container.resolve<ProductController>("ProductController");
   router
     .route("/get-products")
-    .get(productController.getProduct.bind(productController));
+    .get(productController.getProducts.bind(productController));
 
   router
     .route("/get-product/:id")
-    .get(productController.getProductById.bind(productController));
+    .get(productController.getProduct.bind(productController));
 } catch (error) {
   console.error("Error resolving Controller:", error);
 }

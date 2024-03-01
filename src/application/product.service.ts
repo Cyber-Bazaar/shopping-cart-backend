@@ -9,7 +9,7 @@ export class ProductService {
     console.log("USER SERVICE CREATED");
   }
 
-  async getProduct(): Promise<Product[] | null> {
+  async getProducts(): Promise<Product[] | null> {
     try {
       return await this.productRepository.getAllProducts();
     } catch (error) {
@@ -18,7 +18,7 @@ export class ProductService {
     }
   }
 
-  async getProductById(id: number): Promise<Product | null> {
+  async getProduct(id: number): Promise<Product | null> {
     try {
       return await this.productRepository.getProductById(id);
     } catch (error) {

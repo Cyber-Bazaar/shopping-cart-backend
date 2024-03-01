@@ -8,9 +8,9 @@ export class ProductController {
     @Inject("ProductService") private readonly productService: ProductService
   ) {}
 
-  async getProduct(req: Request, res: Response) {
+  async getProducts(req: Request, res: Response) {
     try {
-      const user = await this.productService.getProduct();
+      const user = await this.productService.getProducts();
 
       res.status(200).json({ message: "success", data: user });
     } catch (error) {
@@ -19,16 +19,15 @@ export class ProductController {
     }
   }
 
-  async getProductById(req: Request, res: Response) {
+  async getProduct(req: Request, res: Response) {
     const id: number = +req.params.id;
-    console.log("id:", id);
     // validation
     if (!id) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     try {
-      const user = await this.productService.getProductById(id);
+      const user = await this.productService.getProduct(id);
 
       res.status(200).json({ message: "success", data: user });
     } catch (error) {
