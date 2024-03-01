@@ -1,8 +1,13 @@
-// no need to assign it to a variable since it extends the global scope.
+//to store and retrieve metadata
+//Metadata is used to store additional information about the classes and their dependencies.
+//no need to assign it to a variable since it extends the global scope.
 import "reflect-metadata";
 
 //Defining a unique key that will be used to store and retrieve metadata.
+
+//The @Injectable() decorator is used to mark a class as available to be provided and injected as a dependency
 const INJECTABLE_METADATA_KEY = Symbol("Injectable");
+//decorator is used to define the dependencies that should be injected into a class's constructor when the dependency injector is creating an instance of the class.
 const INJECT_METADATA_KEY = Symbol("Inject");
 
 // The Injectable decorator function
@@ -35,24 +40,49 @@ export function Inject(serviceIdentifier: string): ParameterDecorator {
 
 // The DI Container
 export class DIContainer {
-  private services = new Map();
+  private services = new Map<string, { clazz: any; instance: any }>();
 
-  register(identifier: string, clazz: any) {
-    this.services.set(identifier, clazz);
+  register<T>(identifier: string, clazz: new (...args: any[]) => T): void {
+    this.services.set(identifier, { clazz, instance: null });
   }
 
   resolve<T>(identifier: string): T {
-    const clazz = this.services.get(identifier);
-    if (!clazz) {
+    const service = this.services.get(identifier);
+    if (!service) {
       throw new Error(`Service ${identifier} not found`);
     }
 
+    if (service.instance) {
+      return service.instance;
+    }
+
     const injectedServices =
-      Reflect.getMetadata(INJECT_METADATA_KEY, clazz) || [];
+      Reflect.getMetadata(INJECT_METADATA_KEY, service.clazz) || [];
     const resolvedParams = injectedServices.map(
       (service: { identifier: string }) => this.resolve(service.identifier)
     );
-
-    return new clazz(...resolvedParams); // new Controller(new Service(new Repository())
+    service.instance = new service.clazz(...resolvedParams);
+    return service.instance;
   }
 }
+// export class DIContainer {
+//   private services = new Map();
+
+//   register(identifier: string, clazz: any) {
+//     this.services.set(identifier, clazz);
+//   }
+
+//   resolve<T>(identifier: string): T {
+//     const clazz = this.services.get(identifier);
+//     if (!clazz) {
+//       throw new Error(`Service ${identifier} not found`);
+//     }
+//     const injectedServices =
+//       Reflect.getMetadata(INJECT_METADATA_KEY, clazz) || [];
+//     const resolvedParams = injectedServices.map(
+//       (service: { identifier: string }) => this.resolve(service.identifier)
+//     );
+
+//     return new clazz(...resolvedParams); // new Controller(new Service(new Repository())
+//   }
+// }
