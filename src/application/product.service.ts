@@ -9,7 +9,7 @@ export class ProductService {
     console.log("USER SERVICE CREATED");
   }
 
-  async getProduct(): Promise<Product[] | null> {
+  async getProducts(): Promise<Product[] | null> {
     try {
       return await this.productRepository.getAllProducts();
     } catch (error) {

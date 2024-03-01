@@ -18,7 +18,7 @@ try {
     container.resolve<ProductController>("ProductController");
   router
     .route("/get-products")
-    .get(productController.getProduct.bind(productController));
+    .get(productController.getProducts.bind(productController));
 } catch (error) {
   console.error("Error resolving UserController:", error);
 }

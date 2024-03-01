@@ -1,70 +1,56 @@
-import { Request, Response } from "express";
-import { ProductService } from "../../application/product.service";
 import { ProductController } from "../../presentation/controllers/product.controller";
-import { IProductRepository } from "../../domain/i.product.repository";
-
-jest.mock("../../application/product.service");
+import { ProductService } from "../../application/product.service";
+import { Request, Response } from "express";
 
 describe("ProductController", () => {
-  let productService: ProductService;
-  let productController: ProductController;
-  let mockProductRepository: jest.Mocked<IProductRepository>; // Create a mock repository
+  let mockProductService: Partial<ProductService>;
+  let controller: ProductController;
 
   beforeEach(() => {
-    mockProductRepository = {} as jest.Mocked<IProductRepository>;
-
-    productService = new ProductService(mockProductRepository);
-    productController = new ProductController(productService);
+    mockProductService = {
+      getProducts: jest.fn(),
+    };
+    controller = new ProductController(mockProductService as ProductService);
   });
 
-  it("should return product", async () => {
-    // Arrange
-    const expectedProduct = [
-      {
-        id: 1,
-        name: "Test Product",
-        quantity: 10,
-        price: 100,
-        image: "test-image.jpg",
-      },
-    ]; // Make this an array
-    const mockRequest = {} as Request;
-    const mockResponse = {
+  it("should return all products", async () => {
+    const mockProducts = [
+      { id: 1, name: "Product 1", price: 100 },
+      { id: 2, name: "Product 2", price: 200 },
+    ];
+    (mockProductService.getProducts as jest.Mock).mockResolvedValue(
+      mockProducts
+    );
+
+    const mockReq = {} as Request;
+    const mockRes = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     } as unknown as Response;
 
-    jest.spyOn(productService, "getProduct").mockResolvedValue(expectedProduct);
+    await controller.getProducts(mockReq, mockRes);
 
-    // Act
-    await productController.getProduct(mockRequest, mockResponse);
-
-    // Assert
-    expect(mockResponse.status).toHaveBeenCalledWith(200);
-    expect(mockResponse.json).toHaveBeenCalledWith({
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalledWith({
       message: "success",
-      data: expectedProduct,
+      data: mockProducts,
     });
   });
 
-  it("should return 500 on error", async () => {
-    // Arrange
-    const mockRequest = {} as Request;
-    const mockResponse = {
+  it("should return 500 if something goes wrong", async () => {
+    const error = new Error("Something went wrong");
+    (mockProductService.getProducts as jest.Mock).mockRejectedValue(error);
+
+    const mockReq = {} as Request;
+    const mockRes = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     } as unknown as Response;
 
-    jest
-      .spyOn(productService, "getProduct")
-      .mockRejectedValue(new Error("Test error"));
+    await controller.getProducts(mockReq, mockRes);
 
-    // Act
-    await productController.getProduct(mockRequest, mockResponse);
-
-    // Assert
-    expect(mockResponse.status).toHaveBeenCalledWith(500);
-    expect(mockResponse.json).toHaveBeenCalledWith({
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.json).toHaveBeenCalledWith({
       message: "Internal server error",
     });
   });

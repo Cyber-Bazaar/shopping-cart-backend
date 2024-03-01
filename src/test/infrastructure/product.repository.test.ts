@@ -1,37 +1,41 @@
-import { ProductService } from "../../application/product.service";
-import { IProductRepository } from "../../domain/i.product.repository";
+import { ProductRepository } from "../../infrastructure/type-ORM/product.repository";
+import { Product } from "../../domain/entity/product";
 
-describe("ProductService", () => {
-  let productService: ProductService;
-  let mockProductRepository: jest.Mocked<IProductRepository>;
+describe("ProductRepository", () => {
+  let repository: ProductRepository;
 
   beforeEach(() => {
-    mockProductRepository = {
-      getAllProducts: jest.fn(),
-    } as jest.Mocked<IProductRepository>;
-
-    productService = new ProductService(mockProductRepository);
+    repository = new ProductRepository();
   });
 
   it("should return all products", async () => {
-    // Arrange
-    const expectedProducts = [
+    const mockProducts: Product[] = [
       {
         id: 1,
-        name: "Test Product 1",
-        quantity: 10,
+        name: "Product 1",
         price: 100,
-        image: "test-image1.jpg",
+        quantity: 10,
+        image: "image1.jpg",
       },
-      // Add more products as needed
+      {
+        id: 2,
+        name: "Product 2",
+        price: 200,
+        quantity: 20,
+        image: "image2.jpg",
+      },
     ];
-    mockProductRepository.getAllProducts.mockResolvedValue(expectedProducts);
+    jest.spyOn(repository, "getAllProducts").mockResolvedValue(mockProducts);
 
-    // Act
-    const products = await productService.getProduct();
+    const products = await repository.getAllProducts();
 
-    // Assert
-    expect(products).toEqual(expectedProducts);
-    expect(mockProductRepository.getAllProducts).toHaveBeenCalled();
+    expect(products).toEqual(mockProducts);
+  });
+
+  it("should throw an error if something goes wrong", async () => {
+    const error = new Error("Something went wrong");
+    jest.spyOn(repository, "getAllProducts").mockRejectedValue(error);
+
+    await expect(repository.getAllProducts()).rejects.toThrow(error);
   });
 });

@@ -8,9 +8,9 @@ export class ProductController {
     @Inject("ProductService") private readonly productService: ProductService
   ) {}
 
-  async getProduct(req: Request, res: Response) {
+  async getProducts(req: Request, res: Response) {
     try {
-      const user = await this.productService.getProduct();
+      const user = await this.productService.getProducts();
 
       res.status(200).json({ message: "success", data: user });
     } catch (error) {
