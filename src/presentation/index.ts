@@ -14,7 +14,7 @@ app.use(cors());
 
 //SWAGGER documentation routes
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
-// Routes
+//Shopping cart Routes
 app.use("/api/product", productRouter);
 
 const startServer = async (port: number) => {

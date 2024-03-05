@@ -5,9 +5,7 @@ import { Injectable, Inject } from "../presentation/utils/dIContainer";
 export class ProductService {
   constructor(
     @Inject("ProductRepository") private productRepository: IProductRepository
-  ) {
-    console.log("USER SERVICE CREATED");
-  }
+  ) {}
 
   async getProducts(): Promise<Product[] | null> {
     try {
