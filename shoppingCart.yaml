@@ -71,3 +71,49 @@ paths:
                     type: string
                     description: error
                     example: Internal Server Error
+
+  /api/product/get-product/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get detailed view of the product
+      description: Get an object of the product's details
+      parameters:
+        - name: id
+          in: path
+          description: product ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Request Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    example:
+                      {
+                        "id": 1,
+                        "name": "Water bottle",
+                        "quantity": 5,
+                        "price": 1000,
+                        "image": "kjsdflkadsgb.jpg",
+                      }
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: error
+                    example: Internal Server Error
