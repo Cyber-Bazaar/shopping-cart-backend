@@ -10,11 +10,11 @@ export class ProductController {
 
   async getProducts(req: Request, res: Response) {
     try {
-      const user = await this.productService.getProducts();
+      const products = await this.productService.getProducts();
 
-      res.status(200).json({ message: "success", data: user });
+      res.status(200).json({ message: "success", data: products });
     } catch (error) {
-      console.error("Error while fetching user:", error);
+      console.error("Error while fetching products:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   }

@@ -20,6 +20,6 @@ try {
     .route("/get-products")
     .get(productController.getProducts.bind(productController));
 } catch (error) {
-  console.error("Error resolving UserController:", error);
+  console.error("Error resolving Controller:", error);
 }
 export default router;
