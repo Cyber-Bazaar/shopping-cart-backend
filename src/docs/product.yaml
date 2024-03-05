@@ -1,28 +1,3 @@
-openapi: 3.0.1
-
-info:
-  title: Shopping Cart API
-  description: >-
-    Shopping cart app.
-  version: 1.0.0
-  contact:
-    name: Rumindu De Silva
-    # url: 'https://github.com/Rumindu'
-    email: rumindudesilva@itelsoft.com
-
-servers:
-  - url: "http://localhost:5000"
-    variables:
-      scheme:
-        description: "Shopping-cart is accessible via http"
-        enum:
-          - "https"
-        default: "https"
-
-tags:
-  - name: Products
-    description: CRUD operations on Products
-
 paths:
   /api/product/get-products:
     get:
