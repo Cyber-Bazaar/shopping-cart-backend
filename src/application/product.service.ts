@@ -13,7 +13,7 @@ export class ProductService {
     try {
       return await this.productRepository.getAllProducts();
     } catch (error) {
-      console.error("Error while fetching user:", error);
+      console.error("Error while fetching products:", error);
       throw error;
     }
   }
@@ -22,7 +22,7 @@ export class ProductService {
     try {
       return await this.productRepository.getProductById(id);
     } catch (error) {
-      console.error("Error while fetching user:", error);
+      console.error("Error while fetching product details:", error);
       throw error;
     }
   }
