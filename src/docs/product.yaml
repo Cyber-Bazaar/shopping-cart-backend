@@ -1,0 +1,48 @@
+paths:
+  /api/product/get-products:
+    get:
+      tags:
+        - Products
+      summary: Get all product list
+      description: Get an array of all products
+      responses:
+        "200":
+          description: Request Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    example:
+                      [
+                        {
+                          "id": 1,
+                          "name": "Water bottle",
+                          "quantity": 5,
+                          "price": 1000,
+                          "image": "kjsdflkadsgb.jpg",
+                        },
+                        {
+                          "id": 2,
+                          "name": "Mouse",
+                          "quantity": 7,
+                          "price": 1500,
+                          "image": "fddsakjf.jpg",
+                        },
+                      ]
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: error
+                    example: Internal Server Error
