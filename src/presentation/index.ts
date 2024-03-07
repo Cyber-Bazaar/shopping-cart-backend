@@ -4,6 +4,7 @@ import "reflect-metadata";
 import swaggerUi from "swagger-ui-express";
 import { AppDataSource } from "../config/data.source";
 import productRouter from "./routes/product.routes";
+import categoryRouter from "./routes/category.routes";
 import specs from "../config/swagger";
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 //Shopping cart Routes
 app.use("/api/product", productRouter);
+app.use("/api/category", categoryRouter);
 
 const startServer = async (port: number) => {
   try {
