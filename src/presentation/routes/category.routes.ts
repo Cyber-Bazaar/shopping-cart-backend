@@ -4,7 +4,7 @@ import { CategoryService } from "../../application/category.service";
 import { CategoryRepository } from "../../infrastructure/type-ORM/category.repository";
 import { DIContainer } from "../utils/dIContainer";
 
-const container = new DIContainer();
+const container = DIContainer.getInstance();
 
 //Register services
 container.register("CategoryRepository", CategoryRepository);

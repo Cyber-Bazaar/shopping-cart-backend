@@ -4,7 +4,7 @@ import { ProductService } from "../../application/product.service";
 import { ProductRepository } from "../../infrastructure/type-ORM/product.repository";
 import { DIContainer } from "../utils/dIContainer";
 
-const container = new DIContainer();
+const container = DIContainer.getInstance();
 
 //Register services
 container.register("ProductRepository", ProductRepository);

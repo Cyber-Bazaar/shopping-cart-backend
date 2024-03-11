@@ -40,6 +40,7 @@ export function Inject(serviceIdentifier: string): ParameterDecorator {
 
 // The DI Container
 export class DIContainer {
+  private static instance: DIContainer;
   private services = new Map<string, { clazz: any; instance: any }>();
 
   register<T>(identifier: string, clazz: new (...args: any[]) => T): void {
@@ -64,25 +65,10 @@ export class DIContainer {
     service.instance = new service.clazz(...resolvedParams);
     return service.instance;
   }
+  public static getInstance() {
+    if (!DIContainer.instance) {
+      DIContainer.instance = new DIContainer();
+    }
+    return DIContainer.instance;
+  }
 }
-// export class DIContainer {
-//   private services = new Map();
-
-//   register(identifier: string, clazz: any) {
-//     this.services.set(identifier, clazz);
-//   }
-
-//   resolve<T>(identifier: string): T {
-//     const clazz = this.services.get(identifier);
-//     if (!clazz) {
-//       throw new Error(`Service ${identifier} not found`);
-//     }
-//     const injectedServices =
-//       Reflect.getMetadata(INJECT_METADATA_KEY, clazz) || [];
-//     const resolvedParams = injectedServices.map(
-//       (service: { identifier: string }) => this.resolve(service.identifier)
-//     );
-
-//     return new clazz(...resolvedParams); // new Controller(new Service(new Repository())
-//   }
-// }
