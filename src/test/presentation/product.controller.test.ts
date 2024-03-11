@@ -10,6 +10,7 @@ describe("ProductController", () => {
     mockProductService = {
       getProducts: jest.fn(),
       getProduct: jest.fn(),
+      getProductsByCategoryId: jest.fn(),
     };
     controller = new ProductController(mockProductService as ProductService);
   });
@@ -144,6 +145,84 @@ describe("ProductController", () => {
       } as unknown as Response;
 
       await controller.getProduct(mockReq as Request, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(500);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "Internal server error",
+      });
+    });
+  });
+
+  describe("getProductsByCategoryId", () => {
+    it("should return 200 and the products if products found for the category", async () => {
+      const mockReq: Partial<Request> = { params: { category: "1" } };
+      const mockRes = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
+
+      const mockProducts = [
+        {
+          id: 1,
+          name: "Product 1",
+          quantity: 5,
+          price: 100,
+          image: "kjsdflkadsgb.jpg",
+          category: "1",
+        },
+        {
+          id: 2,
+          name: "Product 2",
+          quantity: 10,
+          price: 1000,
+          image: "kjsdflkadsgbgfh.jpg",
+          category: "1",
+        },
+      ];
+      (
+        mockProductService.getProductsByCategoryId as jest.Mock
+      ).mockResolvedValue(mockProducts);
+
+      await controller.getProductsByCategoryId(mockReq as Request, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "success",
+        data: mockProducts,
+      });
+    });
+
+    it("should return 404 if no products found for the category", async () => {
+      const mockReq: Partial<Request> = { params: { id: "1" } };
+      const mockRes = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
+
+      (
+        mockProductService.getProductsByCategoryId as jest.Mock
+      ).mockResolvedValue(null);
+
+      await controller.getProductsByCategoryId(mockReq as Request, mockRes);
+
+      expect(mockRes.status).toHaveBeenCalledWith(404);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "There isn't any products under this category",
+      });
+    });
+
+    it("should return 500 if there is an internal server error", async () => {
+      const mockReq: Partial<Request> = { params: { id: "1" } };
+      const mockRes = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
+
+      (
+        mockProductService.getProductsByCategoryId as jest.Mock
+      ).mockRejectedValue(new Error());
+
+      await controller.getProductsByCategoryId(mockReq as Request, mockRes);
 
       expect(mockRes.status).toHaveBeenCalledWith(500);
       expect(mockRes.json).toHaveBeenCalledWith({
