@@ -18,11 +18,14 @@ try {
     container.resolve<ProductController>("ProductController");
   router
     .route("/get-products")
-    .get(productController.getProducts.bind(productController));
+    .get((req, res) => productController.getProducts(req, res));
 
   router
     .route("/get-product/:id")
-    .get(productController.getProduct.bind(productController));
+    .get((req, res) => productController.getProduct(req, res));
+  router
+    .route("/category/:id")
+    .get((req, res) => productController.getProductsByCategoryId(req, res));
 } catch (error) {
   console.error("Error resolving Controller:", error);
 }

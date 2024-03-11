@@ -21,7 +21,7 @@ export class ProductController {
 
   async getProduct(req: Request, res: Response) {
     const id = +req.params.id;
-    // validation
+    
     if (!id) {
       return res.status(400).json({ message: "Invalid product id" });
     }
@@ -34,6 +34,20 @@ export class ProductController {
       res.status(200).json({ message: "success", data: product });
     } catch (error) {
       console.error("Error while fetching product:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+  
+  async getProductsByCategoryId(req: Request, res: Response) {
+    try {
+      const categoryId = req.params.id;
+      const products = await this.productService.getProductsByCategoryId(categoryId);
+      if (!products || products.length === 0) {
+        return res.status(404).json({ message: "There isn't any products under this category" });
+      }
+      res.status(200).json({ message: "success", data: products });
+    } catch (error) {
+      console.error("Error while fetching items by category:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   }

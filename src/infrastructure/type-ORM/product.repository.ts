@@ -17,4 +17,10 @@ export class ProductRepository implements IProductRepository {
   async getProductById(id: number): Promise<Product | null> {
     return await this.db.getRepository(Product).findOne({ where: { id } });
   }
+
+  async getProductsByCategoryId(categoryId: number): Promise<Product[] | null> {
+    return await this.db
+      .getRepository(Product)
+      .find({ where: { category: { id: categoryId } } });
+  }
 }

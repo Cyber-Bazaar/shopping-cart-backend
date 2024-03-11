@@ -24,4 +24,12 @@ export class ProductService {
       throw error;
     }
   }
+  async getProductsByCategoryId(categoryId: string): Promise<Product[] | null> {
+    try {
+      return await this.productRepository.getProductsByCategoryId(Number(categoryId));
+    } catch (error: any) {
+      console.error("Error while fetching items by category:", error.message);
+      throw error;
+    }
+  }
 }
