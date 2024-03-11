@@ -1,4 +1,5 @@
 import { ProductService } from "../../application/product.service";
+import { Category } from "../../domain/entity/category";
 import { Product } from "../../domain/entity/product";
 import { IProductRepository } from "../../domain/i.product.repository";
 
@@ -16,6 +17,19 @@ describe("ProductService", () => {
 
   describe("getProducts", () => {
     it("should return all products", async () => {
+      const mockCategory1: Category = {
+        id: 1,
+        name: "Test Category",
+        description: "Test Description",
+        products: [],
+      };
+      const mockCategory2: Category = {
+        id: 2,
+        name: "Test Category2",
+        description: "Test Description2",
+        products: [],
+      };
+
       const mockProducts: Product[] = [
         {
           id: 1,
@@ -23,6 +37,7 @@ describe("ProductService", () => {
           quantity: 10,
           price: 100,
           image: "test-image.jpg",
+          category: mockCategory1,
         },
         {
           id: 2,
@@ -30,6 +45,7 @@ describe("ProductService", () => {
           quantity: 102,
           price: 1002,
           image: "test-image2.jpg",
+          category: mockCategory2,
         },
       ];
       (mockProductRepository.getAllProducts as jest.Mock).mockResolvedValue(
@@ -54,12 +70,19 @@ describe("ProductService", () => {
   });
   describe("getProduct", () => {
     it("should return a product by id", async () => {
+      const mockCategory1: Category = {
+        id: 1,
+        name: "Test Category",
+        description: "Test Description",
+        products: [],
+      };
       const mockProduct: Product = {
         id: 1,
         name: "Test Product",
         quantity: 10,
         price: 100,
         image: "test-image.jpg",
+        category: mockCategory1,
       };
       (mockProductRepository.getProductById as jest.Mock).mockResolvedValue(
         mockProduct

@@ -22,11 +22,13 @@ describe("CategoryService", () => {
           id: 1,
           name: "Test Category",
           description: "Test Category description",
+          products: [],
         },
         {
           id: 2,
           name: "Test Category2",
           description: "Test Category2 description",
+          products: [],
         },
       ];
       (mockCategoryRepository.getCategoryList as jest.Mock).mockResolvedValue(

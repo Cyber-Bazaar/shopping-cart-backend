@@ -15,11 +15,13 @@ describe("CategoryRepository", () => {
           id: 1,
           name: "Category 1",
           description: "Category 1 description",
+          products: [],
         },
         {
           id: 2,
           name: "Category 2",
           description: "Category 2 description",
+          products: [],
         },
       ];
       jest
