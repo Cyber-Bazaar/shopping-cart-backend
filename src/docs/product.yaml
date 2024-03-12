@@ -52,7 +52,7 @@ paths:
       tags:
         - Products
       summary: Get detailed view of the product
-      description: Get an object of the product's details
+      description: Get an Get an array of products which are relevant to the specific category
       parameters:
         - name: id
           in: path
@@ -92,3 +92,50 @@ paths:
                     type: string
                     description: error
                     example: Internal Server Error
+
+/api/product/category/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get products by product's category
+      description: Get an array of the the products
+      parameters:
+        - name: id
+          in: path
+          description: product ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Request Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    example:
+                      {
+                        "id": 1,
+                        "name": "Water bottle",
+                        "quantity": 5,
+                        "price": 1000,
+                        "image": "kjsdflkadsgb.jpg",
+                      }
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: error
+                    example: Internal Server Error
+
