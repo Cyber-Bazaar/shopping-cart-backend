@@ -31,7 +31,7 @@ describe("ProductRepository", () => {
           price: 100,
           quantity: 10,
           image: "image1.jpg",
-          category: mockCategory1
+          category: mockCategory1,
         },
         {
           id: 2,
@@ -39,7 +39,7 @@ describe("ProductRepository", () => {
           price: 200,
           quantity: 20,
           image: "image2.jpg",
-          category: mockCategory2
+          category: mockCategory2,
         },
       ];
       jest.spyOn(repository, "getAllProducts").mockResolvedValue(mockProducts);
@@ -71,7 +71,7 @@ describe("ProductRepository", () => {
         price: 100,
         quantity: 10,
         image: "image1.jpg",
-        category: mockCategory1
+        category: mockCategory1,
       };
       jest.spyOn(repository, "getProductById").mockResolvedValue(mockProduct);
 
@@ -94,5 +94,41 @@ describe("ProductRepository", () => {
 
       await expect(repository.getProductById(1)).rejects.toThrow(error);
     });
+  });
+
+  describe("getProductsByCategoryId", () => {
+    it("should return products for the given category id", async () => {
+      const mockCategory1: Category = {
+        id: 1,
+        name: "Test Category",
+        description: "Test Description",
+        products: [],
+      };
+      const mockProduct: Product[] = [
+        {
+          id: 1,
+          name: "Product 1",
+          price: 100,
+          quantity: 10,
+          image: "image1.jpg",
+          category: mockCategory1,
+        },
+      ];
+      jest
+        .spyOn(repository, "getProductsByCategoryId")
+        .mockResolvedValue(mockProduct);
+
+      const product = await repository.getProductsByCategoryId(1);
+
+      expect(product).toEqual(mockProduct);
+    });
+  });
+
+  it("should return null if no products found for the category", async () => {
+    jest.spyOn(repository, "getProductsByCategoryId").mockResolvedValue(null);
+
+    const product = await repository.getProductsByCategoryId(1);
+
+    expect(product).toBeNull();
   });
 });
