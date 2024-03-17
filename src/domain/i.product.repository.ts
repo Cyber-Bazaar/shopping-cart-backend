@@ -6,4 +6,6 @@ export interface IProductRepository {
   getProductById(id: number): Promise<Product | null>;
   
   getProductsByCategoryId(id: number): Promise<Product[] | null>;
+
+  getDetailsForCart(ids: number[]): Promise<Product[] | null>;
 }

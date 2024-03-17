@@ -51,4 +51,18 @@ export class ProductController {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  async getDetailsForCart(req: Request, res: Response) {
+    try {
+      const productIds = req.body.productIds;
+      const products = await this.productService.getDetailsForCart(productIds);
+      if (!products || products.length === 0) {
+        return res.status(404).json({ message: "Invalid product IDs" });
+      }
+      res.status(200).json({ message: "success", data: products });
+    } catch (error) {
+      console.error("Error while fetching items by category:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }

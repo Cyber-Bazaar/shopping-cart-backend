@@ -1,7 +1,8 @@
 import {plainToInstance} from "class-transformer";
 import { validateOrReject, ValidationError } from 'class-validator';
 import { NextFunction, Request, Response } from 'express';
-import { SubError } from "../../config/SubError";
+import { HttpException } from '../../config/HttpException';
+
 
 export const ValidationMiddleware = (type: any, skipMissingProperties = false, whitelist = true, forbidNonWhitelisted = true) => {
     return (req: Request, res: Response, next: NextFunction) => {
@@ -13,7 +14,7 @@ export const ValidationMiddleware = (type: any, skipMissingProperties = false, w
         })
         .catch((errors: ValidationError[]) => {
           const message = extractConstraints(errors);
-          next(new SubError(JSON.stringify(message), 400));
+          next(new HttpException(JSON.stringify(message),400));
         });
     };
 };

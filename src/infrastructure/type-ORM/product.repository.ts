@@ -1,6 +1,6 @@
 import { IProductRepository } from "../../domain/i.product.repository";
 import { Product } from "../../domain/entity/product";
-import { DataSource } from "typeorm";
+import { DataSource, In } from "typeorm";
 import { AppDataSource } from "../../config/data.source";
 
 export class ProductRepository implements IProductRepository {
@@ -22,5 +22,9 @@ export class ProductRepository implements IProductRepository {
     return await this.db
       .getRepository(Product)
       .find({ where: { category: { id: categoryId } } });
+  }
+
+  async getDetailsForCart(productIds: number[]): Promise<Product[] | null> {
+    return await this.db.getRepository(Product).findBy({ id: In(productIds) });
   }
 }
