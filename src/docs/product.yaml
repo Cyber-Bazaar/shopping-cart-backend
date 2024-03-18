@@ -139,3 +139,67 @@ paths:
                     description: error
                     example: Internal Server Error
 
+
+/api/product/cart-details:
+    post:
+      tags:
+        - Products
+      summary: Get products details for display in cart
+      description: Get an array of the the products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productIds:
+                  type: integer[]
+                  description: product IDs
+                  example: [1, 2]
+      responses:
+        "200":
+          description: Request Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    example:
+                      {
+                        "id": 1,
+                        "name": "Water bottle",
+                        "quantity": 5,
+                        "price": 1000,
+                        "image": "kjsdflkadsgb.jpg",
+                      }
+        
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: error
+                    example: Invalid product IDs
+
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: error
+                    example: Internal Server Error
+
