@@ -122,13 +122,51 @@ describe("ProductRepository", () => {
 
       expect(product).toEqual(mockProduct);
     });
+
+    it("should return null if no products found for the category", async () => {
+      jest.spyOn(repository, "getProductsByCategoryId").mockResolvedValue(null);
+  
+      const product = await repository.getProductsByCategoryId(1);
+  
+      expect(product).toBeNull();
+    });
+  
   });
 
-  it("should return null if no products found for the category", async () => {
-    jest.spyOn(repository, "getProductsByCategoryId").mockResolvedValue(null);
-
-    const product = await repository.getProductsByCategoryId(1);
-
-    expect(product).toBeNull();
+  
+  describe('getDetailsForCart', () => {
+    it('should return products for the given product ids', async () => {
+      const mockCategory1: Category = {
+        id: 1,
+        name: "Test Category",
+        description: "Test Description",
+        products: [],
+      };
+      const mockCategory2: Category = {
+        id: 2,
+        name: "Test Category2",
+        description: "Test Description2",
+        products: [],
+      };
+      const mockProducts = [
+        { id: 1, name: 'Product 1', quantity: 10, price: 100, image: 'image1.jpg', category: mockCategory1 },
+        { id: 2, name: 'Product 2', quantity: 20, price: 200, image: 'image2.jpg', category: mockCategory2 }
+      ];
+      jest.spyOn(repository, 'getDetailsForCart').mockResolvedValue(mockProducts);
+  
+      const result = await repository.getDetailsForCart([1, 2]);
+  
+      expect(result).toEqual(mockProducts);
+      expect(repository.getDetailsForCart).toHaveBeenCalledWith([1, 2]);
+    });
+  
+    it('should return null if no products found for the given ids', async () => {
+      jest.spyOn(repository, 'getDetailsForCart').mockResolvedValue(null);
+  
+      const result = await repository.getDetailsForCart([1, 2]);
+  
+      expect(result).toBeNull();
+      expect(repository.getDetailsForCart).toHaveBeenCalledWith([1, 2]);
+    });
   });
 });

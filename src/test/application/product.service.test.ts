@@ -12,6 +12,7 @@ describe("ProductService", () => {
       getAllProducts: jest.fn(),
       getProductById: jest.fn(),
       getProductsByCategoryId: jest.fn(),
+      getDetailsForCart: jest.fn(),
     };
     service = new ProductService(mockProductRepository as IProductRepository);
   });
@@ -123,6 +124,39 @@ describe("ProductService", () => {
   
       await expect(service.getProductsByCategoryId("1")).rejects.toThrow(error);
       expect(mockProductRepository.getProductsByCategoryId).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('getDetailsForCart', () => {
+    it('should return products for the given product ids', async () => {
+      const mockProducts = [{
+        id: 1,
+        name: "Product 1",
+        quantity: 5,
+        price: 100,
+        image: "kjsdflkadsgb.jpg",
+      },
+      {
+        id: 2,
+        name: "Product 2",
+        quantity: 10,
+        price: 200,
+        image: "sadjsdflkadsgb.jpg",
+      }];
+      (mockProductRepository.getDetailsForCart as jest.Mock).mockResolvedValue(mockProducts);
+  
+      const result = await service.getDetailsForCart([1, 2]);
+  
+      expect(result).toEqual(mockProducts);
+      expect(mockProductRepository.getDetailsForCart).toHaveBeenCalledWith([1, 2]);
+    });
+  
+    it('should throw an error if there is an issue fetching products', async () => {
+      const error = new Error('Error while fetching items by category');
+      (mockProductRepository.getDetailsForCart as jest.Mock).mockRejectedValue(error);
+  
+      await expect(service.getDetailsForCart([1, 2])).rejects.toThrow(error);
+      expect(mockProductRepository.getDetailsForCart).toHaveBeenCalledWith([1, 2]);
     });
   });
 });

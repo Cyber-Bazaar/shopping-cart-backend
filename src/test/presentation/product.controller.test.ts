@@ -11,6 +11,7 @@ describe("ProductController", () => {
       getProducts: jest.fn(),
       getProduct: jest.fn(),
       getProductsByCategoryId: jest.fn(),
+      getDetailsForCart: jest.fn(),
     };
     controller = new ProductController(mockProductService as ProductService);
   });
@@ -230,4 +231,85 @@ describe("ProductController", () => {
       });
     });
   });
+
+  describe('getDetailsForCart', () => {
+    it('should return 404 if no products found', async () => {
+      const req = {
+        body: {
+          productIds: [1, 2]
+        }
+      } as Request;
+  
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      } as unknown as Response;
+      
+      (
+        mockProductService.getDetailsForCart as jest.Mock
+      ).mockResolvedValue([]);
+  
+      await controller.getDetailsForCart(req, res);
+  
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ message: "Invalid product IDs" });
+    });
+  
+    it('should return 200 and the products if products found', async () => {
+      const req = {
+        body: {
+          productIds: [1, 2]
+        }
+      } as Request;
+  
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      } as unknown as Response;
+  
+      const mockProducts = [{
+        "id": 1,
+        "name": "sample_product_1",
+        "quantity": 23,
+        "price": 3000,
+        "image": "dfdasdf.jpg"
+      },
+      {
+        "id": 2,
+        "name": "sample_product2",
+        "quantity": 45,
+        "price": 45666,
+        "image": "adhgj.jpg"
+      }];
+      (
+        mockProductService.getDetailsForCart as jest.Mock
+      ).mockResolvedValue(mockProducts);  
+      await controller.getDetailsForCart(req, res);
+  
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({ message: "success", data: mockProducts });
+    });
+  
+    it('should return 500 if an error occurs', async () => {
+      const req = {
+        body: {
+          productIds: [1, 2]
+        }
+      } as Request;
+  
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      } as unknown as Response;
+      (
+        mockProductService.getDetailsForCart as jest.Mock
+      ).mockRejectedValue(new Error('Test error'));
+
+      await controller.getDetailsForCart(req, res);
+  
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: "Internal server error" });
+    });
+  });
+
 });
