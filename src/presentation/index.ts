@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
+import dotenv from "dotenv";
 import "reflect-metadata";
+import swaggerUi from "swagger-ui-express";
 import swaggerUi from "swagger-ui-express";
 import { AppDataSource } from "../config/data.source";
 import productRouter from "./routes/product.routes";
@@ -9,7 +11,10 @@ import specs from "../config/swagger";
 dotenv.config();
 
 let cors = require("cors");
+let cors = require("cors");
 const app = express();
+const port = Number(process.env.PORT) ?? 5000;
+app.use(cors());
 const port = Number(process.env.PORT) ?? 5000;
 app.use(cors());
 
