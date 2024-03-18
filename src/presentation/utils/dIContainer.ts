@@ -45,7 +45,7 @@ export class DIContainer {
 
   register<T>(identifier: string, clazz: new (...args: any[]) => T): void {
     this.services.set(identifier, { clazz, instance: null });
-  }
+      }
 
   resolve<T>(identifier: string): T {
     const service = this.services.get(identifier);
