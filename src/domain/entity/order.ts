@@ -3,7 +3,7 @@ import { Category } from "./category";
 import { OrderToProduct } from "./orderToProduct";
 
 @Entity()
-export class Product {
+export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -11,16 +11,7 @@ export class Product {
   name: string;
 
   @Column()
-  quantity: number;
-
-  @Column()
-  price: number;
-
-  @Column({ nullable: true })
-  image: string;
-
-  @ManyToOne(() => Category, (category) => category.products)
-  category: Category;
+  mailingAddress: string;
 
   @OneToMany(() => OrderToProduct, (orderToProduct) => orderToProduct.product)
   orderToProduct: OrderToProduct[];
