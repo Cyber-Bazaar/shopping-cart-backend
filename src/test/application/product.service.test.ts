@@ -9,44 +9,76 @@ describe("ProductService", () => {
   beforeEach(() => {
     mockProductRepository = {
       getAllProducts: jest.fn(),
+      getProductById: jest.fn(),
     };
     service = new ProductService(mockProductRepository as IProductRepository);
   });
 
-  it("should return all products", async () => {
-    const mockProducts: Product[] = [
-      {
+  describe("getProducts", () => {
+    it("should return all products", async () => {
+      const mockProducts: Product[] = [
+        {
+          id: 1,
+          name: "Test Product",
+          quantity: 10,
+          price: 100,
+          image: "test-image.jpg",
+        },
+        {
+          id: 2,
+          name: "Test Product2",
+          quantity: 102,
+          price: 1002,
+          image: "test-image2.jpg",
+        },
+      ];
+      (mockProductRepository.getAllProducts as jest.Mock).mockResolvedValue(
+        mockProducts
+      );
+
+      const products = await service.getProducts();
+
+      expect(products).toEqual(mockProducts);
+      expect(mockProductRepository.getAllProducts).toHaveBeenCalled();
+    });
+
+    it("should throw an error if something goes wrong", async () => {
+      const error = new Error("Something went wrong");
+      (mockProductRepository.getAllProducts as jest.Mock).mockRejectedValue(
+        error
+      );
+
+      await expect(service.getProducts()).rejects.toThrow(error);
+      expect(mockProductRepository.getAllProducts).toHaveBeenCalled();
+    });
+  });
+  describe("getProduct", () => {
+    it("should return a product by id", async () => {
+      const mockProduct: Product = {
         id: 1,
         name: "Test Product",
         quantity: 10,
         price: 100,
         image: "test-image.jpg",
-      },
-      {
-        id: 2,
-        name: "Test Product2",
-        quantity: 102,
-        price: 1002,
-        image: "test-image2.jpg",
-      },
-    ];
-    (mockProductRepository.getAllProducts as jest.Mock).mockResolvedValue(
-      mockProducts
-    );
+      };
+      (mockProductRepository.getProductById as jest.Mock).mockResolvedValue(
+        mockProduct
+      );
 
-    const products = await service.getProducts();
+      const product = await service.getProduct(1);
 
-    expect(products).toEqual(mockProducts);
-    expect(mockProductRepository.getAllProducts).toHaveBeenCalled();
-  });
+      expect(product).toEqual(mockProduct);
+      expect(mockProductRepository.getProductById).toHaveBeenCalledWith(1);
+    });
 
-  it("should throw an error if something goes wrong", async () => {
-    const error = new Error("Something went wrong");
-    (mockProductRepository.getAllProducts as jest.Mock).mockRejectedValue(
-      error
-    );
+    it("should throw an error if something goes wrong", async () => {
+      const error = new Error("Something went wrong");
+      (mockProductRepository.getProductById as jest.Mock).mockRejectedValue(
+        error
+      );
 
-    await expect(service.getProducts()).rejects.toThrow(error);
-    expect(mockProductRepository.getAllProducts).toHaveBeenCalled();
+      await expect(service.getProduct(1)).rejects.toThrow(error);
+      expect(mockProductRepository.getProductById).toHaveBeenCalledWith(1);
+    });
   });
 });

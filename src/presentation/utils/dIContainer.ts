@@ -40,6 +40,7 @@ export function Inject(serviceIdentifier: string): ParameterDecorator {
 
 // The DI Container
 export class DIContainer {
+  private static instance: DIContainer;
   private services = new Map<string, { clazz: any; instance: any }>();
 
   register<T>(identifier: string, clazz: new (...args: any[]) => T): void {
@@ -63,5 +64,11 @@ export class DIContainer {
     );
     service.instance = new service.clazz(...resolvedParams);
     return service.instance;
+  }
+  public static getInstance() {
+    if (!DIContainer.instance) {
+      DIContainer.instance = new DIContainer();
+    }
+    return DIContainer.instance;
   }
 }
