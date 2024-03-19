@@ -13,4 +13,8 @@ export class ProductRepository implements IProductRepository {
   async getAllProducts(): Promise<Product[] | null> {
     return await this.db.getRepository(Product).find();
   }
+
+  async getProductById(id: number): Promise<Product | null> {
+    return await this.db.getRepository(Product).findOne({ where: { id } });
+  }
 }

@@ -1,0 +1,43 @@
+paths:
+  /api/category/category-list:
+    get:
+      tags:
+        - Category
+      summary: Get category list
+      description: Get an array of category list
+      responses:
+        "200":
+          description: Request Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    example:
+                      [
+                        {
+                          "id": 1,
+                          "name": "Home Appliances",
+                          "description": "",
+                        },
+                        { "id": 2,
+                         "name": "Mens clothing", 
+                         "description": "" 
+                         },
+                      ]
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: error
+                    example: Internal Server Error

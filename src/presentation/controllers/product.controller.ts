@@ -18,4 +18,23 @@ export class ProductController {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  async getProduct(req: Request, res: Response) {
+    const id = +req.params.id;
+    // validation
+    if (!id) {
+      return res.status(400).json({ message: "Invalid product id" });
+    }
+
+    try {
+      const product = await this.productService.getProduct(id);
+      if (!product) {
+        return res.status(404).json({ message: "product doesn't found" });
+      }
+      res.status(200).json({ message: "success", data: product });
+    } catch (error) {
+      console.error("Error while fetching product:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }
