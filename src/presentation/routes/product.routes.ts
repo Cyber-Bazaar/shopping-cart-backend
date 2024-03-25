@@ -3,7 +3,7 @@ import { ProductController } from "../controllers/product.controller";
 import { ProductService } from "../../application/product.service";
 import { ProductRepository } from "../../infrastructure/type-ORM/product.repository";
 import { DIContainer } from "../utils/dIContainer";
-import { ValidationMiddleware } from "../middlewares/validator";
+import { ValidationMiddleware } from "../middlewares/validator.middleware";
 import { ProductIds } from "../dto/dto";
 const container = DIContainer.getInstance();
 

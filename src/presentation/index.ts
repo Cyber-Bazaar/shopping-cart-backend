@@ -7,6 +7,7 @@ import productRouter from "./routes/product.routes";
 import categoryRouter from "./routes/category.routes";
 import orderRouter from "./routes/order.routes";
 import specs from "../config/swagger";
+import {errorHandler} from "./middlewares/error.middleware";
 dotenv.config();
 
 let cors = require("cors");
@@ -24,6 +25,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api/product", productRouter);
 app.use("/api/category", categoryRouter);
 app.use("/api/order", orderRouter)
+
+app.use(errorHandler);
 
 const startServer = async (port: number) => {
   try {
