@@ -8,10 +8,25 @@ export class Order {
   id: number;
 
   @Column()
-  name: string;
+  sub: string;
 
   @Column()
-  mailingAddress: string;
+  first_name: string;
+
+  @Column()
+  last_name: string;
+
+  @Column()
+  address_line1: string;
+
+  @Column()
+  address_line2: string;
+
+  @Column()
+  zip_code: string;
+
+  @Column()
+  shipping_method: string;
 
   @OneToMany(() => OrderToProduct, (orderToProduct) => orderToProduct.product)
   orderToProduct: OrderToProduct[];

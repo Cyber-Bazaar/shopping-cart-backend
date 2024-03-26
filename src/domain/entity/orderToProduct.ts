@@ -14,7 +14,7 @@ export class OrderToProduct {
   productId: number;
 
   @Column()
-  quentiy: number;
+  quantity: number;
 
   @Column({type: "decimal", precision: 10, scale: 2})
   unitPrice: number;

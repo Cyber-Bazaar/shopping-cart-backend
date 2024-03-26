@@ -1,7 +1,7 @@
 import {plainToInstance} from "class-transformer";
 import { validateOrReject, ValidationError } from 'class-validator';
 import { NextFunction, Request, Response } from 'express';
-import { HttpException } from '../../config/HttpException';
+import { HttpException } from '../../interface/i.httpException';
 
 
 export const ValidationMiddleware = (type: any, skipMissingProperties = false, whitelist = true, forbidNonWhitelisted = true) => {

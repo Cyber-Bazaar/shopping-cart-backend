@@ -5,7 +5,7 @@ export class OrderService {
   constructor(
     @Inject("OrderRepository") private orderRepository: IOrderRepository
   ) {}
-  async getOrderHistory() {
+  async getOrderHistory(sub?:string) {
     try {
       return await this.orderRepository.getOrderHistory();
     } catch (error) {
