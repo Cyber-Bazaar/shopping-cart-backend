@@ -7,7 +7,7 @@ export class OrderService {
   ) {}
   async getOrderHistory(sub?:string) {
     try {
-      return await this.orderRepository.getOrderHistory();
+      return await this.orderRepository.getOrderHistory(sub);
     } catch (error) {
       console.error("Error while fetching products:", error);
       throw error;
