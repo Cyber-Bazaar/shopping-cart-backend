@@ -1,9 +1,8 @@
 import { IOrderRepository } from "../../domain/i.order.repository";
-import { Order } from "../../domain/entity/order";
 import { OrderToProduct } from "../../domain/entity/orderToProduct";
 import { DataSource, In } from "typeorm";
 import { AppDataSource } from "../../config/data.source";
-import { Product } from "../../domain/entity/product";
+
 
 export class OrderRepository implements IOrderRepository {
   private readonly db: DataSource;

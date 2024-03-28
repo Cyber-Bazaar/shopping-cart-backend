@@ -1,6 +1,7 @@
 import { ProductRepository } from "../../infrastructure/type-ORM/product.repository";
 import { Product } from "../../domain/entity/product";
 import { Category } from "../../domain/entity/category";
+import { OrderToProduct } from "../../domain/entity/orderToProduct";
 
 describe("ProductRepository", () => {
   let repository: ProductRepository;
@@ -24,6 +25,8 @@ describe("ProductRepository", () => {
         products: [],
       };
 
+      const mockOrderToProduct : OrderToProduct[] = []
+
       const mockProducts: Product[] = [
         {
           id: 1,
@@ -32,6 +35,7 @@ describe("ProductRepository", () => {
           quantity: 10,
           image: "image1.jpg",
           category: mockCategory1,
+          orderToProduct: mockOrderToProduct,
         },
         {
           id: 2,
@@ -40,6 +44,7 @@ describe("ProductRepository", () => {
           quantity: 20,
           image: "image2.jpg",
           category: mockCategory2,
+          orderToProduct: mockOrderToProduct,
         },
       ];
       jest.spyOn(repository, "getAllProducts").mockResolvedValue(mockProducts);
@@ -65,6 +70,7 @@ describe("ProductRepository", () => {
         description: "Test Description",
         products: [],
       };
+      const mockOrderToProduct : OrderToProduct[] = []
       const mockProduct: Product = {
         id: 1,
         name: "Product 1",
@@ -72,6 +78,7 @@ describe("ProductRepository", () => {
         quantity: 10,
         image: "image1.jpg",
         category: mockCategory1,
+        orderToProduct: mockOrderToProduct,
       };
       jest.spyOn(repository, "getProductById").mockResolvedValue(mockProduct);
 
@@ -112,6 +119,7 @@ describe("ProductRepository", () => {
           quantity: 10,
           image: "image1.jpg",
           category: mockCategory1,
+          orderToProduct: [],
         },
       ];
       jest
@@ -149,8 +157,8 @@ describe("ProductRepository", () => {
         products: [],
       };
       const mockProducts = [
-        { id: 1, name: 'Product 1', quantity: 10, price: 100, image: 'image1.jpg', category: mockCategory1 },
-        { id: 2, name: 'Product 2', quantity: 20, price: 200, image: 'image2.jpg', category: mockCategory2 }
+        { id: 1, name: 'Product 1', quantity: 10, price: 100, image: 'image1.jpg', category: mockCategory1, orderToProduct: []},
+        { id: 2, name: 'Product 2', quantity: 20, price: 200, image: 'image2.jpg', category: mockCategory2, orderToProduct: []}
       ];
       jest.spyOn(repository, 'getDetailsForCart').mockResolvedValue(mockProducts);
   

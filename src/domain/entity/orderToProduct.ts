@@ -8,7 +8,7 @@ export class OrderToProduct {
   orderToProductId: number;
 
   @Column()
-  orderId: string;
+  orderId: number;
 
   @Column()
   productId: number;

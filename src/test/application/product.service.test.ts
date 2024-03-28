@@ -1,6 +1,7 @@
 import { ProductService } from "../../application/product.service";
 import { Category } from "../../domain/entity/category";
 import { Product } from "../../domain/entity/product";
+import { OrderToProduct } from "../../domain/entity/orderToProduct";
 import { IProductRepository } from "../../domain/i.product.repository";
 
 describe("ProductService", () => {
@@ -31,7 +32,7 @@ describe("ProductService", () => {
         description: "Test Description2",
         products: [],
       };
-
+      const mockOrderToProduct : OrderToProduct[] = []
       const mockProducts: Product[] = [
         {
           id: 1,
@@ -40,6 +41,7 @@ describe("ProductService", () => {
           price: 100,
           image: "test-image.jpg",
           category: mockCategory1,
+          orderToProduct:mockOrderToProduct,
         },
         {
           id: 2,
@@ -48,6 +50,7 @@ describe("ProductService", () => {
           price: 1002,
           image: "test-image2.jpg",
           category: mockCategory2,
+          orderToProduct:mockOrderToProduct,
         },
       ];
       (mockProductRepository.getAllProducts as jest.Mock).mockResolvedValue(
@@ -78,6 +81,8 @@ describe("ProductService", () => {
         description: "Test Description",
         products: [],
       };
+      const mopckOrderToProduct : OrderToProduct[] = []
+
       const mockProduct: Product = {
         id: 1,
         name: "Test Product",
@@ -85,6 +90,7 @@ describe("ProductService", () => {
         price: 100,
         image: "test-image.jpg",
         category: mockCategory1,
+        orderToProduct:mopckOrderToProduct,
       };
       (mockProductRepository.getProductById as jest.Mock).mockResolvedValue(
         mockProduct
