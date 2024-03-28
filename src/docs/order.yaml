@@ -1,0 +1,74 @@
+paths:
+  /api/order/:
+    get:
+      tags:
+        - Order
+      summary: Get all order history
+      description: Get an array of order history
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Request Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    example:
+                      [
+                        {
+                          "orderId": 1,
+                          "productId": 1,
+                          "quantity": 4,
+                          "unitPrice": "34.00",
+                          "product": {
+                            "name": "sample_product_1"
+                          },
+                          "order": {
+                            "address_line1": "No25, School",
+                            "address_line2": "Coombo 03",
+                            "zip_code": "003",
+                            "shipping_method": ""
+                          }
+                        },
+                        {
+                          "orderId": 1,
+                          "productId": 2,
+                          "quantity": 45,
+                          "unitPrice": "3345.00",
+                          "product": {
+                            "name": "sample_product2"
+                          },
+                          "order": {
+                            "address_line1": "No25, School",
+                            "address_line2": "Coombo 03",
+                            "zip_code": "003",
+                            "shipping_method": ""
+                          }
+                        },
+                      ]
+     
+  
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+                    
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: Bearer
+      bearerFormat: JWT
