@@ -37,13 +37,16 @@ export class OrderRepository implements IOrderRepository {
 
         const orderResult = await transactionalEntityManager.save(orderEntity);
 
-        const orderToProductEntity = new OrderToProduct();
-        orderToProductEntity.orderId = orderResult.id;
-        orderToProductEntity.productId = order.orderInfo.productId;
-        orderToProductEntity.unitPrice = order.orderInfo.unitPrice;
-        orderToProductEntity.quantity = order.orderInfo.quantity;
-
-        await transactionalEntityManager.save(orderToProductEntity);
+        for (let orderInfo of order.orderInfo) {
+          let orderToProductEntity = new OrderToProduct();
+          orderToProductEntity.orderId = orderResult.id;
+          orderToProductEntity.productId = orderInfo.productId;
+          orderToProductEntity.order = orderResult;
+          orderToProductEntity.unitPrice = orderInfo.unitPrice;
+          orderToProductEntity.quantity = orderInfo.quantity;
+        
+          await transactionalEntityManager.save(orderToProductEntity);
+        }
 
         return orderResult;
       })
