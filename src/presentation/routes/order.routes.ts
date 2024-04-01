@@ -3,6 +3,8 @@ import { OrderController } from "../controllers/order.controller";
 import { OrderService } from "../../application/order.service";
 import { OrderRepository } from "../../infrastructure/type-ORM/order.repository";
 import { DIContainer } from "../utils/dIContainer";
+import { ValidationMiddleware } from "../middlewares/validator.middleware";
+import { CreateOrderDto } from "../dto/dto";
 import { validateAccessToken, decodeToken } from "../middlewares/auth0.middleware";
 const container = DIContainer.getInstance();
 
@@ -20,7 +22,7 @@ try {
     .route("/")
     .get(validateAccessToken,decodeToken,(req, res) => orderController.getOrderHistory(req, res));
 
-  router.route("/create").post(validateAccessToken,decodeToken,(req, res) => orderController.createOrder(req, res));
+  router.route("/create").post(ValidationMiddleware(CreateOrderDto),validateAccessToken,decodeToken,(req, res) => orderController.createOrder(req, res));
 
 } catch (error) {
   console.error("Error resolving Controller:", error);
