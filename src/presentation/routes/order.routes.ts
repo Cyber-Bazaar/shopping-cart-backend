@@ -20,6 +20,8 @@ try {
     .route("/")
     .get(validateAccessToken,decodeToken,(req, res) => orderController.getOrderHistory(req, res));
 
+  router.route("/create").post(validateAccessToken,decodeToken,(req, res) => orderController.createOrder(req, res));
+
 } catch (error) {
   console.error("Error resolving Controller:", error);
 }

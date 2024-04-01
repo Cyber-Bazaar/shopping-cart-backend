@@ -27,4 +27,19 @@ export class OrderController {
       return res.status(401).json({ message: "Unauthorized" });
     }
   }
+
+  async createOrder(req: ExpressRequest, res: Response) {
+    if (req.tokenPayload && req.tokenPayload.sub) {
+      try {
+        const order = await this.orderService.createOrder(req.body, req.tokenPayload.sub);
+        res.status(200).json({ message: "success", data: order });
+      } catch (error) {
+        console.error("Error while fetching products:", error);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+    }
+    else {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+  }
 }

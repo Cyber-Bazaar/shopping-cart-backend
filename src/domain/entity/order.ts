@@ -1,6 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
-import { Category } from "./category";
-import { OrderToProduct } from "./orderToProduct";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany,BeforeInsert } from "typeorm";
+import moment from 'moment-timezone';
+import { Category } from "./category";import { OrderToProduct } from "./orderToProduct";
 
 @Entity()
 export class Order {
@@ -9,6 +9,9 @@ export class Order {
 
   @Column()
   sub: string;
+
+  @Column({ type: 'timestamp' })
+  createdAt: Date;
 
   @Column()
   first_name: string;
@@ -28,6 +31,11 @@ export class Order {
   @Column()
   shipping_method: string;
 
-  @OneToMany(() => OrderToProduct, (orderToProduct) => orderToProduct.product)
+  @BeforeInsert()
+  setCreatedAt() {
+    this.createdAt = moment.utc().tz('Asia/Colombo').toDate();
+  }
+
+  @OneToMany(() => OrderToProduct, (orderToProduct) => orderToProduct.product,{cascade: true})
   orderToProduct: OrderToProduct[];
 }

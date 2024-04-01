@@ -35,6 +35,7 @@
     "express": "^4.18.2",
     "express-oauth2-jwt-bearer": "^1.6.0",
     "jsonwebtoken": "^9.0.2",
+    "moment-timezone": "^0.5.45",
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.2.1",
     "swagger-ui-express": "^5.0.0",

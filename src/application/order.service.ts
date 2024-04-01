@@ -13,4 +13,12 @@ export class OrderService {
       throw error;
     }
   }
+  async createOrder(order: any, sub: string) {
+    try {
+      return await this.orderRepository.create(order, sub);
+    } catch (error) {
+      console.error("Error while fetching products:", error);
+      throw error;
+    }
+  }
 }
