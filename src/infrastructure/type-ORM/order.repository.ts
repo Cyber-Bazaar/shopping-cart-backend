@@ -1,7 +1,7 @@
 import { IOrderRepository } from "../../domain/i.order.repository";
 import { OrderToProduct } from "../../domain/entity/orderToProduct";
 import { Order } from "../../domain/entity/order";
-import { DataSource, In } from "typeorm";
+import { DataSource } from "typeorm";
 import { AppDataSource } from "../../config/data.source";
 
 
@@ -24,23 +24,33 @@ export class OrderRepository implements IOrderRepository {
   }
 
   async create(order: any, sub: string): Promise<any> {
-    const orderEntity = new Order();
-    orderEntity.first_name = order.first_name;
-    orderEntity.last_name = order.last_name;
-    
-    orderEntity.address_line1 = order.address_line1;
-    orderEntity.address_line2 = order.address_line2;
-    orderEntity.zip_code = order.zip_code;
-    orderEntity.shipping_method = order.shipping_method;
-    orderEntity.sub = sub;
-    const orderResult = await this.db.getRepository(Order).save(orderEntity);
+    try {
+      await this.db.manager.transaction(async transactionalEntityManager => {
+        const orderEntity = new Order();
+        orderEntity.first_name = order.first_name;
+        orderEntity.last_name = order.last_name;
+        orderEntity.address_line1 = order.address_line1;
+        orderEntity.address_line2 = order.address_line2;
+        orderEntity.zip_code = order.zip_code;
+        orderEntity.shipping_method = order.shipping_method;
+        orderEntity.sub = sub;
 
-    const orderToProductEntity = new OrderToProduct();
-    orderToProductEntity.orderId = orderResult.id;
-    orderToProductEntity.productId = order.orderInfo.productId;
-    orderToProductEntity.unitPrice = order.orderInfo.unitPrice;
-    orderToProductEntity.quantity = order.orderInfo.quantity;
-    return await this.db.getRepository(OrderToProduct).save(orderToProductEntity);
+        const orderResult = await transactionalEntityManager.save(orderEntity);
+
+        const orderToProductEntity = new OrderToProduct();
+        orderToProductEntity.orderId = orderResult.id;
+        orderToProductEntity.productId = order.orderInfo.productId;
+        orderToProductEntity.unitPrice = order.orderInfo.unitPrice;
+        orderToProductEntity.quantity = order.orderInfo.quantity;
+
+        await transactionalEntityManager.save(orderToProductEntity);
+
+        return orderResult;
+      })
+    } catch (error) {
+      console.error('Transaction failed:', error);
+      throw error;
+    }
   }
 
 }
