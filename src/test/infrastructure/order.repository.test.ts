@@ -1,6 +1,23 @@
 import { OrderRepository } from "../../infrastructure/type-ORM/order.repository";
+import { Order } from "../../domain/entity/order";
+import { OrderToProduct } from "../../domain/entity/orderToProduct";
+import { EntityManager } from 'typeorm';
 
+interface OrderInfo {
+  productId: number;
+  unitPrice: number;
+  quantity: number;
+}
 
+interface OrderData {
+  first_name: string;
+  last_name: string;
+  address_line1: string;
+  address_line2: string;
+  zip_code: string;
+  shipping_method: string;
+  orderInfo: OrderInfo[];
+}
 
 describe("OrderRepository", () => {
   let repository: OrderRepository;
@@ -64,103 +81,73 @@ describe("OrderRepository", () => {
       }
     });
   });
+  
+  describe("create",()=>{
+    it("should create an order", async () => {
+      const mockOrderData: OrderData = {
+        first_name: "Test",
+        last_name: "User",
+        address_line1: "123 Main St",
+        address_line2: "Apt 1",
+        zip_code: "12345",
+        shipping_method: "Express",
+        orderInfo: [
+          {
+            productId: 1,
+            unitPrice: 10,
+            quantity: 2,
+          },
+        ],
+      };
+      const mockOrder = new Order();
+      mockOrder.first_name = mockOrderData.first_name;
+      mockOrder.last_name = mockOrderData.last_name;
+      mockOrder.address_line1 = mockOrderData.address_line1;
+      mockOrder.address_line2 = mockOrderData.address_line2;
+      mockOrder.zip_code = mockOrderData.zip_code;
+      mockOrder.shipping_method = mockOrderData.shipping_method;
+      mockOrder.sub = "testSub";
+      mockOrder.id = 1;
+      const mockOrderToProduct = new OrderToProduct();
+      mockOrderToProduct.orderId = mockOrder.id;
+      mockOrderToProduct.productId = mockOrderData.orderInfo[0].productId;
+      mockOrderToProduct.unitPrice = mockOrderData.orderInfo[0].unitPrice;
+      mockOrderToProduct.quantity = mockOrderData.orderInfo[0].quantity;
+      mockOrderToProduct.order = mockOrder;
+      jest.spyOn(repository, "create").mockResolvedValue(mockOrder);
+
+      const order = await repository.create(mockOrderData, "testSub");
+
+      expect(order).toEqual(mockOrder);
+    });
+
+    it("should throw an error if something goes wrong", async () => {
+      const mockOrderData: OrderData = {
+        first_name: "Test",
+        last_name: "User",
+        address_line1: "123 Main St",
+        address_line2: "Apt 1",
+        zip_code: "12345",
+        shipping_method: "Express",
+        orderInfo: [
+          {
+            productId: 1,
+            unitPrice: 10,
+            quantity: 2,
+          },
+        ],
+      };
+      const error = new Error("Something went wrong");
+      jest.spyOn(repository, "create").mockRejectedValue(error);
+
+      try {
+        await repository.create(mockOrderData, "testSub");
+      } catch (error) {
+        expect(error).toEqual(error);
+      }
+    });
+  })
 });
 
 
 
-
-
-// import { OrderRepository } from "../../infrastructure/type-ORM/order.repository";
-// import { OrderToProduct } from "../../domain/entity/orderToProduct";
-// import { getRepository, Repository, SelectQueryBuilder } from "typeorm";
-
-// jest.mock("typeorm", () => ({
-//   getRepository: jest.fn(),
-// }));
-
-// describe("OrderRepository", () => {
-//   let orderRepository: OrderRepository;
-//   let mockOrderToProductRepository: jest.Mocked<Repository<OrderToProduct>>;
-//   let mockQueryBuilder: jest.Mocked<SelectQueryBuilder<OrderToProduct>>;
-
-//   beforeEach(() => {
-//     mockQueryBuilder = {
-//       select: jest.fn().mockReturnThis(),
-//       leftJoin: jest.fn().mockReturnThis(),
-//       where: jest.fn().mockReturnThis(),
-//       getMany: jest.fn(),
-//     } as unknown as jest.Mocked<SelectQueryBuilder<OrderToProduct>>;
-
-//     mockOrderToProductRepository = {
-//       createQueryBuilder: jest.fn().mockReturnValue(mockQueryBuilder),
-//     } as unknown as jest.Mocked<Repository<OrderToProduct>>;
-
-//     (getRepository as jest.Mock).mockReturnValue(mockOrderToProductRepository);
-
-//     orderRepository = new OrderRepository();
-//   });
-
-//   afterEach(() => {
-//     jest.clearAllMocks();
-//   });
-
-//   it("should get order history", async () => {
-//     const sub = "testSub";
-//     const mockOrderHistory: OrderToProduct[] = [
-//       {
-//         orderToProductId: 1,
-//         orderId: 1,
-//         productId: 1,
-//         unitPrice: 10,
-//         quantity: 2,
-//         product: {
-//           id:1,
-//           name: "Product 1",
-//           quantity: 10,
-//           price: 100,
-//           image: "image1.jpg",
-//           category: {
-//             id: 1,
-//             name: "Test Category",
-//             description: "Test Description",
-//             products: [],
-//           },
-//           orderToProduct: [],
-//         },
-//         order: {
-//           id: 1,
-//           sub: "testSub",
-//           first_name: "Test",
-//           last_name: "User",
-//           address_line1: "123 Main St",
-//           address_line2: "Apt 1",
-//           zip_code: "12345",
-//           shipping_method: "Express",
-//           orderToProduct: [],
-          
-//         },
-//       },]
-//     mockQueryBuilder.getMany.mockResolvedValue(mockOrderHistory);
-
-//     const result = await orderRepository.getOrderHistory(sub);
-
-//     expect(result).toEqual(mockOrderHistory);
-//     expect(getRepository).toHaveBeenCalledWith(OrderToProduct);
-//     expect(mockOrderToProductRepository.createQueryBuilder).toHaveBeenCalledWith("otp");
-//     expect(mockQueryBuilder.select).toHaveBeenCalledWith([
-//       "otp.orderId",
-//       "otp.productId",
-//       "product.name",
-//       "otp.unitPrice",
-//       "otp.quantity",
-//       "order.address_line1",
-//       "order.address_line2",
-//       "order.zip_code",
-//       "order.shipping_method",
-//     ]);
-//     expect(mockQueryBuilder.leftJoin).toHaveBeenCalledWith("otp.product", "product");
-//     expect(mockQueryBuilder.leftJoin).toHaveBeenCalledWith("otp.order", "order");
-//     expect(mockQueryBuilder.where).toHaveBeenCalledWith("order.sub = :Sub", { Sub: sub });
-//     expect(mockQueryBuilder.getMany).toHaveBeenCalled();
-//   });
-// });

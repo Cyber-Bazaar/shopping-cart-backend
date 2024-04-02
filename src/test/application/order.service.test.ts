@@ -25,7 +25,7 @@ describe("OrderService", () => {
           },
           "order": {
             "address_line1": "No25, School",
-            "address_line2": "Coombo 03",
+            "address_line2": "Colombo 03",
             "zip_code": "003",
             "shipping_method": ""
           }
@@ -40,7 +40,7 @@ describe("OrderService", () => {
           },
           "order": {
             "address_line1": "No25, School",
-            "address_line2": "Coombo 03",
+            "address_line2": "Colombo 03",
             "zip_code": "003",
             "shipping_method": ""
           }
@@ -60,6 +60,51 @@ describe("OrderService", () => {
       (mockOrderRepository.getOrderHistory as jest.Mock).mockRejectedValue(new Error('Test error'));
 
       await expect(service.getOrderHistory('testSub')).rejects.toThrow('Test error');
+    });
+  });
+
+  describe("createOrder", () => {
+    it("should create an order and return it", async () => {
+      const mockOrder = { "first_name": "Rumindu",
+      "last_name": "Kavishka",
+      "address_line1": "3rd lane",
+      "address_line2": "Batapola road, Meetiyagoda",
+      "zip_code": "8080",
+      "shipping_method": "Ponny express",
+      "orderInfo": [{
+        "productId": 2,
+        "unitPrice": 43.50,
+        "quantity": 51
+      },
+      {
+        "productId": 1,
+        "unitPrice": 23.40,
+        "quantity": 34
+      },
+     ] };
+      mockOrderRepository.create = jest.fn().mockResolvedValue(mockOrder);
+      
+      const result = await service.createOrder(mockOrder, 'testSub');
+      
+      expect(mockOrderRepository.create).toHaveBeenCalledWith(mockOrder, 'testSub');
+      expect(result).toEqual(mockOrder);
+    });
+  
+    it("should throw an error if there is a problem", async () => {
+      const mockError = new Error("Error while fetching products");
+      mockOrderRepository.create = jest.fn().mockRejectedValue(mockError);
+      
+      await expect(service.createOrder({"first_name": "Rumindu",
+      "last_name": "Kavishka",
+      "address_line1": "3rd lane",
+      "address_line2": "Batapola road, Meetiyagoda",
+      "zip_code": "8080",
+      "shipping_method": "Ponny express",
+      "orderInfo": [{
+        "productId": 2,
+        "unitPrice": 43.50,
+        "quantity": 51
+      }]}, 'testSub')).rejects.toThrow(mockError);
     });
   });
 });
