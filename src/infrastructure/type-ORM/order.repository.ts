@@ -4,6 +4,21 @@ import { Order } from "../../domain/entity/order";
 import { DataSource } from "typeorm";
 import { AppDataSource } from "../../config/data.source";
 
+interface OrderInfo {
+  productId: number;
+  unitPrice: number;
+  quantity: number;
+}
+
+interface OrderData {
+  first_name: string;
+  last_name: string;
+  address_line1: string;
+  address_line2: string;
+  zip_code: string;
+  shipping_method: string;
+  orderInfo: OrderInfo[];
+}
 
 export class OrderRepository implements IOrderRepository {
   private readonly db: DataSource;
@@ -23,7 +38,7 @@ export class OrderRepository implements IOrderRepository {
       .getMany();
   }
 
-  async create(order: any, sub: string): Promise<any> {
+  async create(order: OrderData, sub: string): Promise<any> {
     try {
       await this.db.manager.transaction(async transactionalEntityManager => {
         const orderEntity = new Order();
@@ -47,7 +62,6 @@ export class OrderRepository implements IOrderRepository {
         
           await transactionalEntityManager.save(orderToProductEntity);
         }
-
         return orderResult;
       })
     } catch (error) {
