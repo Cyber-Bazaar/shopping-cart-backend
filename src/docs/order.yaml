@@ -65,10 +65,92 @@ paths:
                   message:
                     type: string
                     example: Unauthorized
-                    
+
+/api/order/create:
+    post:
+      tags:
+        - Order
+      summary: place the order
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  example: "John"
+                  required: true
+                last_name: 
+                  type: string
+                  example: "Doe"
+                  required: true
+                address_line1:
+                  type: string
+                  example: "No 25, School"
+                  required: true
+                address_line2:
+                  type: string
+                  example: "Colombo 03"
+                  required: true
+                zip_code:
+                  type: number
+                  example: 00300
+                  required: true
+                shipping_method:
+                  type: string
+                  example: "Standard"
+                  required: true
+                orderInfo:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      productId:
+                        type: integer
+                        example: 1
+                        required: true
+                      unitPrice:
+                        type: number
+                        example: 34.00
+                        required: true
+                      quantity:
+                        type: integer
+                        example: 2
+                        required: true
+
+      responses:
+        "200":
+          description: Request Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: successfully inserted
+        
+
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: error
+                    example: Internal Server Error
+
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: Bearer
       bearerFormat: JWT
+      description: don't use "Bearer" key word before the token. just {token}
