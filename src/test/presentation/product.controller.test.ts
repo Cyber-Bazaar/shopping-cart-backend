@@ -37,7 +37,34 @@ describe("ProductController", () => {
       (mockProductService.getProducts as jest.Mock).mockResolvedValue(
         mockProducts
       );
+  describe("getProducts", () => {
+    it("should return all products", async () => {
+      const mockProducts = [
+        {
+          id: 1,
+          name: "Product 1",
+          quantity: 5,
+          price: 100,
+          image: "kjsdflkadsgb.jpg",
+        },
+        {
+          id: 2,
+          name: "Product 2",
+          quantity: 10,
+          price: 200,
+          image: "sadjsdflkadsgb.jpg",
+        },
+      ];
+      //when the getProducts method is called, it should return the mockProducts
+      (mockProductService.getProducts as jest.Mock).mockResolvedValue(
+        mockProducts
+      );
 
+      const mockReq = {} as Request;
+      const mockRes = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
       const mockReq = {} as Request;
       const mockRes = {
         status: jest.fn().mockReturnThis(),
@@ -45,7 +72,14 @@ describe("ProductController", () => {
       } as unknown as Response;
 
       await controller.getProducts(mockReq, mockRes);
+      await controller.getProducts(mockReq, mockRes);
 
+      expect(mockRes.status).toHaveBeenCalledWith(200);
+      expect(mockRes.json).toHaveBeenCalledWith({
+        message: "success",
+        data: mockProducts,
+      });
+    });
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith({
         message: "success",
@@ -56,13 +90,22 @@ describe("ProductController", () => {
     it("should return 500 if something goes wrong", async () => {
       const error = new Error("Something went wrong");
       (mockProductService.getProducts as jest.Mock).mockRejectedValue(error);
+    it("should return 500 if something goes wrong", async () => {
+      const error = new Error("Something went wrong");
+      (mockProductService.getProducts as jest.Mock).mockRejectedValue(error);
 
       const mockReq = {} as Request;
       const mockRes = {
         status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       } as unknown as Response;
+      const mockReq = {} as Request;
+      const mockRes = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
 
+      await controller.getProducts(mockReq, mockRes);
       await controller.getProducts(mockReq, mockRes);
 
       expect(mockRes.status).toHaveBeenCalledWith(500);

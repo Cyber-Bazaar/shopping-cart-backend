@@ -45,10 +45,16 @@ describe("ProductRepository", () => {
       jest.spyOn(repository, "getAllProducts").mockResolvedValue(mockProducts);
 
       const products = await repository.getAllProducts();
+      const products = await repository.getAllProducts();
 
       expect(products).toEqual(mockProducts);
     });
+      expect(products).toEqual(mockProducts);
+    });
 
+    it("should throw an error if something goes wrong", async () => {
+      const error = new Error("Something went wrong");
+      jest.spyOn(repository, "getAllProducts").mockRejectedValue(error);
     it("should throw an error if something goes wrong", async () => {
       const error = new Error("Something went wrong");
       jest.spyOn(repository, "getAllProducts").mockRejectedValue(error);

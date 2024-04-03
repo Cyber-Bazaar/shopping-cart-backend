@@ -5,6 +5,7 @@ import { ProductRepository } from "../../infrastructure/type-ORM/product.reposit
 import { DIContainer } from "../utils/dIContainer";
 
 const container = DIContainer.getInstance();
+const container = DIContainer.getInstance();
 
 //Register services
 container.register("ProductRepository", ProductRepository);

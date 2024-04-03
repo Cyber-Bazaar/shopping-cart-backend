@@ -6,6 +6,7 @@ export class ProductService {
   constructor(
     @Inject("ProductRepository") private productRepository: IProductRepository
   ) {}
+  ) {}
 
   async getProducts(): Promise<Product[] | null> {
     try {

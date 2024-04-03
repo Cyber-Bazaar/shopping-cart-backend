@@ -54,11 +54,20 @@ describe("ProductService", () => {
       );
 
       const products = await service.getProducts();
+      const products = await service.getProducts();
 
       expect(products).toEqual(mockProducts);
       expect(mockProductRepository.getAllProducts).toHaveBeenCalled();
     });
+      expect(products).toEqual(mockProducts);
+      expect(mockProductRepository.getAllProducts).toHaveBeenCalled();
+    });
 
+    it("should throw an error if something goes wrong", async () => {
+      const error = new Error("Something went wrong");
+      (mockProductRepository.getAllProducts as jest.Mock).mockRejectedValue(
+        error
+      );
     it("should throw an error if something goes wrong", async () => {
       const error = new Error("Something went wrong");
       (mockProductRepository.getAllProducts as jest.Mock).mockRejectedValue(
