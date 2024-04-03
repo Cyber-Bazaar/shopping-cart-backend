@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --config jest.config.ts --coverage",
+    "test": "jest --config jest.config.ts --coverage",
     "dev": "nodemon src/presentation/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
@@ -23,6 +25,9 @@
     "supertest": "^6.3.4",
     "swagger-jsdoc": "^6.2.8",
     "ts-jest": "^29.1.2",
+    "supertest": "^6.3.4",
+    "swagger-jsdoc": "^6.2.8",
+    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
@@ -32,6 +37,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "reflect-metadata": "^0.2.1",
+    "swagger-ui-express": "^5.0.0",
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.2.1",
     "swagger-ui-express": "^5.0.0",
