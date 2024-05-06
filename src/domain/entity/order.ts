@@ -36,6 +36,6 @@ export class Order {
     this.createdAt = moment.utc().tz('Asia/Colombo').toDate();
   }
 
-  @OneToMany(() => OrderToProduct, (orderToProduct) => orderToProduct.product,{cascade: true})
+  @OneToMany(() => OrderToProduct, (orderToProduct) => orderToProduct.order,{cascade: true})
   orderToProduct: OrderToProduct[];
 }

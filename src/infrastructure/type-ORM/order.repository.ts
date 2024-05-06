@@ -27,16 +27,46 @@ export class OrderRepository implements IOrderRepository {
     this.db = AppDataSource;
   }
 
+
   async getOrderHistory(sub?: string): Promise<any> {
-    return await this.db.getRepository(OrderToProduct)
-      .createQueryBuilder('otp')
-      .select(['otp.orderId', 'otp.productId', 'product.name', 'otp.unitPrice', 'otp.quantity',
-        'order.address_line1', 'order.address_line2', 'order.zip_code', 'order.shipping_method'])
-      .leftJoin('otp.product', 'product')
-      .leftJoin('otp.order', 'order')
-      .where('order.sub = :Sub', { Sub: sub })
-      .getMany();
+    const orders = await this.db.getRepository(Order).find({
+      where: { sub },
+      relations: ['orderToProduct', 'orderToProduct.product']
+    });
+  
+    // Transform the orders
+    const transformedOrders = orders.map(order => {
+      const orderInfo = order.orderToProduct.map(otp => ({
+        productId: otp.productId,
+        name: otp.product.name,
+        quantity: otp.quantity,
+        price: otp.unitPrice,
+        image: otp.product.image
+      }));
+  
+      return {
+        ...order,
+        orderInfo,
+        orderToProduct: undefined  // remove the orderToProduct property
+      };
+    });
+  
+    return {
+      message: "success",
+      data: transformedOrders
+    };
   }
+
+  // async getOrderHistory(sub?: string): Promise<any> {
+  //   return await this.db.getRepository(OrderToProduct)
+  //     .createQueryBuilder('otp')
+  //     .select(['otp.orderId', 'otp.productId', 'product.name', 'otp.unitPrice', 'otp.quantity',
+  //       'order.address_line1', 'order.address_line2', 'order.zip_code', 'order.shipping_method'])
+  //     .leftJoin('otp.product', 'product')
+  //     .leftJoin('otp.order', 'order')
+  //     .where('order.sub = :Sub', { Sub: sub })
+  //     .getMany();
+  // }
 
   async create(order: OrderData, sub: string): Promise<any> {
     try {
@@ -59,7 +89,7 @@ export class OrderRepository implements IOrderRepository {
           orderToProductEntity.order = orderResult;
           orderToProductEntity.unitPrice = orderInfo.unitPrice;
           orderToProductEntity.quantity = orderInfo.quantity;
-        
+
           await transactionalEntityManager.save(orderToProductEntity);
         }
         return orderResult;
