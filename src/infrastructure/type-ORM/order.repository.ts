@@ -20,6 +20,27 @@ interface OrderData {
   orderInfo: OrderInfo[];
 }
 
+interface OrderInfoHistory {
+  productId: number;
+  name: string;
+  quantity: number;
+  price: number;
+  image: string;
+}
+
+interface AllOrderHistory {
+  id: number;
+  sub: string;
+  createdAt: Date;
+  first_name: string;
+  last_name: string;
+  address_line1: string;
+  address_line2: string;
+  zip_code: string;
+  shipping_method: string;
+  orderInfo: OrderInfoHistory[];
+}
+
 export class OrderRepository implements IOrderRepository {
   private readonly db: DataSource;
 
@@ -28,11 +49,12 @@ export class OrderRepository implements IOrderRepository {
   }
 
 
-  async getOrderHistory(sub?: string): Promise<any> {
+  async getOrderHistory(sub?: string): Promise<AllOrderHistory[]> {
     const orders = await this.db.getRepository(Order).find({
       where: { sub },
       relations: ['orderToProduct', 'orderToProduct.product']
     });
+    console.log(orders)
   
     // Transform the orders
     const transformedOrders = orders.map(order => {
@@ -51,9 +73,32 @@ export class OrderRepository implements IOrderRepository {
       };
     });
   
+    return transformedOrders;
+  }
+
+  async getOrderDetails(orderId: number, sub: string): Promise<any> {
+    const order = await this.db.getRepository(Order).findOne({
+      where: { id: orderId, sub },
+      relations: ['orderToProduct', 'orderToProduct.product']
+    });
+  
+    // If the order does not exist or does not belong to the user, return an error
+    if (!order) {
+      throw new Error('Order not found or you do not have permission to view this order');
+    }
+  
+    // Transform the order
+    const orderInfo = order.orderToProduct.map(otp => ({
+      productId: otp.productId,
+      name: otp.product.name,
+      quantity: otp.quantity,
+      price: otp.unitPrice,
+      image: otp.product.image
+    }));
+  
     return {
-      message: "success",
-      data: transformedOrders
+      ...order,
+      orderInfo
     };
   }
 
@@ -70,6 +115,7 @@ export class OrderRepository implements IOrderRepository {
 
   async create(order: OrderData, sub: string): Promise<any> {
     try {
+      let orderResult;
       await this.db.manager.transaction(async transactionalEntityManager => {
         const orderEntity = new Order();
         orderEntity.first_name = order.first_name;
@@ -80,7 +126,7 @@ export class OrderRepository implements IOrderRepository {
         orderEntity.shipping_method = order.shipping_method;
         orderEntity.sub = sub;
 
-        const orderResult = await transactionalEntityManager.save(orderEntity);
+        orderResult = await transactionalEntityManager.save(orderEntity);
 
         for (let orderInfo of order.orderInfo) {
           let orderToProductEntity = new OrderToProduct();
@@ -92,8 +138,8 @@ export class OrderRepository implements IOrderRepository {
 
           await transactionalEntityManager.save(orderToProductEntity);
         }
-        return orderResult;
       })
+      return orderResult;
     } catch (error) {
       console.error('Transaction failed:', error);
       throw error;
