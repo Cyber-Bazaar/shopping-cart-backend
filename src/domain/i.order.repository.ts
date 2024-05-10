@@ -38,7 +38,7 @@ interface AllOrderHistory {
 
 
 export interface IOrderRepository {
-  getOrderDetails(orderId: number, sub: string): Promise<Order>;
+  getOrderDetails(orderId: number, sub: string): Promise<any>;
   getOrderHistory(sub?:string): Promise<AllOrderHistory[]>;
   create(order: any, sub: string): Promise<Order>;
 }
