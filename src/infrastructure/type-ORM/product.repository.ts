@@ -10,8 +10,14 @@ export class ProductRepository implements IProductRepository {
     this.db = AppDataSource;
   }
 
-  async getAllProducts(): Promise<Product[] | null> {
-    return await this.db.getRepository(Product).find();
+  async getAllProducts(page:number): Promise<any> {
+    const builder = this.db.getRepository(Product).createQueryBuilder("products");
+    const total = await builder.getCount();
+    const limit =6;
+    const last_page= Math.ceil(await builder.getCount()/limit);
+    builder.offset((page - 1) * limit);
+    builder.limit(limit);
+    return ({data:await builder.getMany(), page,last_page,total});
   }
 
   async getProductById(id: number): Promise<Product | null> {

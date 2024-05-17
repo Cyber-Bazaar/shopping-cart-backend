@@ -7,9 +7,10 @@ export class ProductService {
     @Inject("ProductRepository") private productRepository: IProductRepository
   ) {}
 
-  async getProducts(): Promise<Product[] | null> {
+  async getProducts(page:number): Promise<Product[] | null> {
     try {
-      return await this.productRepository.getAllProducts();
+      return await this.productRepository.getAllProducts(page);
+      
     } catch (error) {
       console.error("Error while fetching products:", error);
       throw error;

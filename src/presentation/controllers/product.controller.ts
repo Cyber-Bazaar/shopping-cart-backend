@@ -10,8 +10,8 @@ export class ProductController {
 
   async getProducts(req: Request, res: Response) {
     try {
-      const products = await this.productService.getProducts();
-
+      const page = parseInt(req.query.page as string)||1;
+      const products = await this.productService.getProducts(page);
       res.status(200).json({ message: "success", data: products });
     } catch (error) {
       console.error("Error while fetching products:", error);

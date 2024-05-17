@@ -1,7 +1,7 @@
 import { Product } from "./entity/product";
 
 export interface IProductRepository {
-  getAllProducts(): Promise<Product[] | null>;
+  getAllProducts(page:number): Promise<Product[] | null>;
 
   getProductById(id: number): Promise<Product | null>;
   
