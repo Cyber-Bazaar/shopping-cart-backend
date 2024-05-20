@@ -32,7 +32,7 @@ export function Inject(serviceIdentifier: string): ParameterDecorator {
     });
     Reflect.defineMetadata(
       INJECT_METADATA_KEY,
-      existingInjectedServices,
+      existingInjectedServices.reverse(),
       target
     );
   } as ParameterDecorator;
