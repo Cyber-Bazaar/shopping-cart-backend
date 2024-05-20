@@ -54,7 +54,7 @@ export class OrderRepository implements IOrderRepository {
       where: { sub },
       relations: ['orderToProduct', 'orderToProduct.product']
     });
-    console.log(orders)
+    
   
     // Transform the orders
     const transformedOrders = orders.map(order => {

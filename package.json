@@ -37,6 +37,7 @@
     "express-oauth2-jwt-bearer": "^1.6.0",
     "jsonwebtoken": "^9.0.2",
     "mailtrap": "^3.3.0",
+    "mailtrap-client": "^1.1.1",
     "moment-timezone": "^0.5.45",
     "mysql": "^2.18.1",
     "nodemailer": "^6.9.13",
